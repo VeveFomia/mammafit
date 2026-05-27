@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Nutrizione 🤱">
+<title>Nutrizione in Gravidanza</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --frutta: #f5a623;
+  --frutta-light: #fef3dc;
+  --frutta-text: #7a4f00;
+  --verdura: #5a9e4b;
+  --verdura-light: #e8f5e3;
+  --verdura-text: #2a5220;
+  --cereali: #c4924a;
+  --cereali-light: #f7edd8;
+  --cereali-text: #6b4a1a;
+  --latticini: #5b9bd5;
+  --latticini-light: #deeef9;
+  --latticini-text: #1a4a7a;
+  --pesce: #4ab8c4;
+  --pesce-light: #d8f3f6;
+  --pesce-text: #1a5f6a;
+  --legumi: #9b7fd4;
+  --legumi-light: #ede7f9;
+  --legumi-text: #4a2d8a;
+  --uova: #e8b84b;
+  --uova-light: #fdf3d8;
+  --uova-text: #7a5a00;
+  --carne: #e06b5a;
+  --carne-light: #fce8e5;
+  --carne-text: #7a1f10;
+  --grassi: #8bc34a;
+  --grassi-light: #e8f5d8;
+  --grassi-text: #3a5a10;
+  --dolci: #e484b3;
+  --dolci-light: #fce8f3;
+  --dolci-text: #7a1f50;
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --text: #2a2420;
+  --text-muted: #7a6e65;
+  --border: #e8e2d8;
+  --accent: #c4714a;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 400; }
+
+/* HEADER */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-title { font-size: 18px; font-style: italic; color: var(--accent); }
+.header-week { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+.header-nav { display: flex; gap: 8px; align-items: center; }
+.btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn:hover { background: var(--bg); color: var(--text); }
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: #b05a38; }
+
+/* LAYOUT */
+.container { max-width: 100%; padding: 16px; }
+
+/* WEEK GRID */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+  min-width: 0;
+}
+.day-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-width: 0;
+}
+.day-header {
+  background: var(--bg);
+  padding: 8px 6px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.day-header .day-num {
+  display: block;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text);
+  font-family: 'Fraunces', serif;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.day-header.today { background: var(--accent); }
+.day-header.today .day-num, .day-header.today { color: white; }
+
+/* MEAL SLOTS */
+.meal-slot {
+  border-bottom: 1px solid var(--border);
+  padding: 4px 5px;
+}
+.meal-slot:last-child { border-bottom: none; }
+.meal-label {
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+.meal-editor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 5px;
+  min-height: 36px;
+  cursor: text;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+.meal-editor:focus-within { background: var(--bg); }
+.meal-chip {
+  font-size: 11px;
+  padding: 2px 5px 2px 7px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  max-width: 100%;
+  word-break: break-word;
+}
+.meal-chip-x {
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.5;
+  padding: 0 1px;
+  flex-shrink: 0;
+}
+.meal-chip-x:hover { opacity: 1; }
+.meal-tag-input {
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  min-width: 60px;
+  flex: 1;
+  padding: 2px 2px;
+  line-height: 1.5;
+}
+.meal-tag-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+/* FICHE PANEL */
+.fiche-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.fiche-panel h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent); font-style: italic; }
+.fiche-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.fiche-item {
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fiche-name { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.fiche-targets { font-size: 10px; opacity: 0.75; }
+.fiche-progress { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
+.fiche-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.fiche-dot.filled { opacity: 1; background: currentColor; }
+.fiche-dot.half { opacity: 1; }
+.fiche-dot.over { opacity: 1; background: currentColor; border-color: #e04b4b; }
+
+/* LEGEND */
+.legend {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.legend h3 { font-size: 13px; margin-bottom: 8px; color: var(--text-muted); }
+.legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px; }
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text-muted);
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+.legend-swatch {
+  width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+}
+
+/* ARCHIVIO */
+.archive-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.archive-panel h3 { font-size: 14px; margin-bottom: 10px; color: var(--text-muted); font-style: italic; }
+.archive-list { display: flex; flex-direction: column; gap: 6px; }
+.archive-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.archive-item:hover { background: var(--border); }
+.archive-empty { font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+/* TABS */
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+.tab {
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* WEEK NAV */
+.week-nav {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.week-label { font-family: 'Fraunces', serif; font-size: 16px; font-style: italic; flex: 1; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #2a2420; color: white;
+  padding: 10px 18px; border-radius: 20px;
+  font-size: 13px; z-index: 999; opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+@media (max-width: 900px) {
+  .week-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .meal-input { font-size: 11px; min-height: 22px; }
+}
+@media (max-width: 600px) {
+  .week-grid { grid-template-columns: 1fr; }
+  .day-col { display: grid; grid-template-columns: 80px 1fr; }
+  .day-header { writing-mode: initial; display: flex; align-items: center; gap: 8px; padding: 10px; border-bottom: none; border-right: 1px solid var(--border); }
+  .day-header .day-num { font-size: 22px; }
+  .meals-col { display: flex; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Nutrizione in gravidanza 🤱</div>
+    <div class="header-week" id="headerWeek"></div>
+    <div id="syncIndicator" style="font-size:11px;margin-top:2px;">🔄 Caricamento...</div>
+  </div>
+  <div class="header-nav">
+    <button class="btn" onclick="showArchive()">📂 Archivio</button>
+    <button class="btn btn-primary" onclick="newWeek()">+ Nuova settimana</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('settimana')">Settimana</button>
+    <button class="tab" onclick="showTab('fiche')">Porzioni & obiettivi</button>
+    <button class="tab" onclick="showTab('archivio')">Archivio</button>
+    <button class="tab" onclick="showTab('guida')">Guida</button>
+  </div>
+
+  <!-- TAB SETTIMANA -->
+  <div id="tab-settimana">
+    <div class="week-nav">
+      <span class="week-label" id="weekLabel"></span>
+      <button class="btn" onclick="prevWeek()">← Settimana precedente</button>
+      <button class="btn" onclick="nextWeek()">Settimana successiva →</button>
+    </div>
+
+    <!-- FICHE RIEPILOGO SETTIMANA -->
+    <div class="fiche-panel" id="ficheSummary">
+      <h3>Porzioni disponibili al giorno / a settimana</h3>
+      <div class="fiche-grid" id="ficheGrid"></div>
+    </div>
+
+    <!-- GRIGLIA GIORNI -->
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+
+  <!-- TAB FICHE -->
+  <div id="tab-fiche" style="display:none">
+    <div class="fiche-panel">
+      <h3>Obiettivi settimanali per categoria</h3>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Basati sulle linee guida della Fondazione IRCCS San Gerardo dei Tintori — Regione Lombardia</p>
+      <div id="ficheConfig" style="display:grid;gap:10px;"></div>
+    </div>
+    <div class="legend">
+      <h3>Parole chiave riconosciute automaticamente</h3>
+      <div class="legend-grid" id="legendGrid"></div>
+    </div>
+  </div>
+
+  <!-- TAB ARCHIVIO -->
+  <div id="tab-archivio" style="display:none">
+    <div class="archive-panel">
+      <h3>Settimane archiviate</h3>
+      <div class="archive-list" id="archiveList"></div>
+    </div>
+  </div>
+
+  <!-- TAB GUIDA -->
+  <div id="tab-guida" style="display:none">
+    <div class="fiche-panel">
+      <h3>Come funziona</h3>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-muted);display:flex;flex-direction:column;gap:10px;">
+        <p><strong style="color:var(--text)">Inserisci i pasti</strong> — scrivi cosa hai mangiato in ogni casella. L'app riconosce automaticamente la categoria (frutta, verdura, pesce…) e colora la cella del colore corrispondente.</p>
+        <p><strong style="color:var(--text)">Porzioni visive</strong> — in cima alla settimana vedi quante "porzioni" di ogni categoria hai usato. I pallini pieni = porzioni consumate. Grigio = ancora disponibili.</p>
+        <p><strong style="color:var(--text)">Obiettivi</strong> — gli obiettivi giornalieri e settimanali sono pre-impostati secondo le linee guida ospedaliere. Puoi modificarli nella scheda "Porzioni & obiettivi".</p>
+        <p><strong style="color:var(--text)">Archivio</strong> — ogni settimana viene salvata automaticamente. Clicca "Archivio" per rivedere le settimane passate.</p>
+        <p><strong style="color:var(--text)">Salva sul desktop</strong> — su Safari: tocca Condividi → "Aggiungi alla schermata Home". Su Mac: File → "Aggiungi alla Dock". I dati rimangono salvati nel browser.</p>
+        <p><strong style="color:var(--text)">Consigli dall'ospedale</strong> — bevi ≥ 2L di acqua al giorno · evita digiuni lunghi · preferisci cereali integrali · riduci zuccheri e caffeina · evita il fegato (troppa vitamina A).</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONFIGURAZIONE CATEGORIE =====
+const CATEGORIE = {
+  dolci:     { nome: 'Dolci',              colore: '#e484b3', light: '#fce8f3', text: '#7a1f50', giorni: null, settimana: 2,  keywords: ['torta','gelato','budino','crostata','muffin','dolce','dessert','tiramisù','panna cotta','caramella','snack dolce','nutella','cioccolato','brioche','galbusera','oro saiwa','cioccoro','saiwa','crackers al cioccolato','cracker cioccolato','crackers riso cioccolato','crackers riso latte','crackers cioccolato latte','crackers cioccolato fondente','cracker riso','frollini','frollino','marmellata','confettura','miele'] },
+  olio:      { nome: 'Olio e olive',       colore: '#8bc34a', light: '#e8f5d8', text: '#3a5a10', giorni: 3,  settimana: 21, keywords: ['olio','olive','olio di oliva','evo','olio evo'] },
+  semi:      { nome: 'Semi e frutta secca',colore: '#a0784a', light: '#f2e8d8', text: '#5a3a10', giorni: 2,  settimana: 14, keywords: ['semi','semi misti','semi di zucca','semi di girasole','semi di lino','semi di chia','semi di sesamo','semi di canapa','semi di papavero','frutta secca','pistacchi','pistacchio','noci','mandorle','nocciole','anacardi','pinoli','cashew','arachidi','mix di frutta secca'] },
+  avocado:   { nome: 'Avocado',            colore: '#6aaa5a', light: '#e2f5dc', text: '#2a5a20', giorni: null, settimana: 2, keywords: ['avocado'] },
+  frutta:    { nome: 'Frutta',             colore: '#f5a623', light: '#fef3dc', text: '#7a4f00', giorni: 2,  settimana: 14, keywords: ['mela','mele','pera','pere','banana','banane','arancia','arance','kiwi','kiwi giallo','fragola','fragole','uva','mango','pesca','pesche','albicocca','albicocche','prugna','prugne','ciliegia','ciliegie','melone','cocomero','ananas','pompelmo','pompelmi','limone','limoni','mandarino','mandarini','fico','fichi','lampone','lamponi','mora','more','mirtillo','mirtilli','melograno','frutta','macedonia','succo di frutta','smoothie'] },
+  verdura:   { nome: 'Verdura',            colore: '#5a9e4b', light: '#e8f5e3', text: '#2a5220', giorni: 3,  settimana: 21, keywords: ['zucchine','carota','carote','broccoli','spinaci','insalata','pomodoro','pomodorini','pomodori','cetriolo','peperone','peperoni','peperoncino','melanzana','cavolfiore','cavolo','sedano','finocchio','finocchi','piselli','asparago','asparagi','carciofo','carciofi','fagiolino','fagiolini','lattuga','rucola','bietola','cipolla','aglio','cime di rapa','rapini','verza','radicchio','cicoria','indivia','erbette','verdura','minestrone','zuppa di verdure','passato','vellutata','verdure'] },
+  cereali:   { nome: 'Cereali',            colore: '#c4924a', light: '#f7edd8', text: '#6b4a1a', giorni: 2,  settimana: 14, keywords: ['pasta','riso','pane','couscous','farro','orzo','avena','polenta','grissini','cereali','pancakes','fette biscottate','gallette','tortillas','gnocchi','quinoa','piadina','piadine','focaccia','pizza','tigelle','pizzoccheri','biscotti','biscotto','sciat','sciatt'] },
+  latticini: { nome: 'Latticini',          colore: '#5b9bd5', light: '#deeef9', text: '#1a4a7a', giorni: 2,  settimana: 14, keywords: ['latte','yogurt','formaggio','mozzarella','ricotta','parmigiano','grana','brie','provolone','scamorza','gorgonzola','pecorino','feta','sottiletta','sottilette','emmental','asiago','fontina','taleggio','caciotta','caciocavallo','stracchino','crescenza','robiola','primosale','quartirolo','squacquerone','Philadelphia','fiocchi di latte','kefir','latte di soia','latticini','burro'] },
+  legumi:    { nome: 'Legumi',             colore: '#9b7fd4', light: '#ede7f9', text: '#4a2d8a', giorni: null, settimana: 5, keywords: ['fagioli','lenticchie','ceci','soia','edamame','lupini','fave','legumi','hummus','tofu','cotoletta veggy','cotoletta veg','veggy','veggie burger','burger vegetale','burger veg','polpette veg','proteina di pisello','proteina vegetale','kioene','cotolette spinaci','spinaci kioene','cotoletta spinaci','polpette spinaci','burger spinaci'] },
+  uova:      { nome: 'Uova',               colore: '#e8b84b', light: '#fdf3d8', text: '#7a5a00', giorni: null, settimana: 2, keywords: ['omelette','uovo','uova','frittata','uova strapazzate','uova sode','uova fritte','egg','eggs'] },
+  pesce:     { nome: 'Pesce',              colore: '#4ab8c4', light: '#d8f3f6', text: '#1a5f6a', giorni: null, settimana: 2, keywords: ['salmone','tonno','merluzzo','branzino','orata','sardina','sgombro','alice','trota','halibut','sogliola','baccalà','polpo','gamberi','calamari','cozze','vongole','pesce','frutti di mare','sushi'] },
+  carne:     { nome: 'Carne',              colore: '#e06b5a', light: '#fce8e5', text: '#7a1f10', giorni: null, settimana: 2, keywords: ['pollo','tacchino','manzo','vitello','maiale','agnello','coniglio','anatra','bistecca','hamburger','cotoletta','scaloppina','arrosto','spezzatino','carne','wurstel'] },
+  salumi:    { nome: 'Salumi',             colore: '#b04a3a', light: '#f5ddd8', text: '#5a1a10', giorni: null, settimana: 2, keywords: ['mortadella','prosciutto','salame','bresaola','salumi','speck','pancetta','coppa','affettato','affettati'] },
+};
+
+const GIORNI = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+const PASTI = [
+  { id: 'colazione',   label: 'Colazione' },
+  { id: 'spuntino_m',  label: 'Snack' },
+  { id: 'pranzo',      label: 'Pranzo' },
+  { id: 'spuntino_p',  label: 'Snack' },
+  { id: 'cena',        label: 'Cena' },
+];
+
+// ===== STATE =====
+let currentWeekStart = getMonday(new Date());
+let viewingWeekStart = null; // null = current, altrimenti data archivio
+let data = {}; // { 'YYYY-Www': { 'lun_colazione': 'testo', ... } }
+
+function getMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function weekKey(date) {
+  const d = new Date(date);
+  const jan4 = new Date(d.getFullYear(), 0, 4);
+  const week = Math.ceil(((d - jan4) / 86400000 + jan4.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
+}
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4mN3Y36ccbcT3F_5_ZV1pr2AxzUR8zmIsuhYym8FgnbS713AgX0KGvJ9nW0fYW9dC/exec';
+let saveTimeout = null;
+let syncStatus = 'ok'; // 'ok' | 'saving' | 'error'
+
+function loadData() {
+  // Carica dal localStorage mentre aspettiamo il cloud
+  try { data = JSON.parse(localStorage.getItem('gravidanza_data') || '{}'); } catch(e) { data = {}; }
+  // Poi carica dal cloud e aggiorna
+  setSyncIndicator('loading');
+  fetch(SCRIPT_URL + '?action=load')
+    .then(r => r.json())
+    .then(cloudData => {
+      if (cloudData && typeof cloudData === 'object' && !cloudData.error) {
+        data = cloudData;
+        localStorage.setItem('gravidanza_data', JSON.stringify(data));
+        renderWeek();
+        renderFiche();
+        setSyncIndicator('ok');
+      } else {
+        setSyncIndicator('ok'); // usa localStorage
+      }
+    })
+    .catch(() => setSyncIndicator('offline'));
+}
+
+function saveData() {
+  // Salva subito in localStorage
+  localStorage.setItem('gravidanza_data', JSON.stringify(data));
+  // Poi salva sul cloud con debounce (aspetta 800ms di pausa)
+  if (saveTimeout) clearTimeout(saveTimeout);
+  setSyncIndicator('saving');
+  saveTimeout = setTimeout(() => {
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    .then(r => r.json())
+    .then(res => {
+      if (res.ok) setSyncIndicator('ok');
+      else setSyncIndicator('error');
+    })
+    .catch(() => setSyncIndicator('offline'));
+  }, 800);
+}
+
+function setSyncIndicator(status) {
+  syncStatus = status;
+  const el = document.getElementById('syncIndicator');
+  if (!el) return;
+  const icons = { loading: '🔄 Caricamento...', saving: '💾 Salvataggio...', ok: '☁️ Sincronizzato', offline: '📴 Offline — dati locali', error: '⚠️ Errore salvataggio' };
+  el.textContent = icons[status] || '';
+  el.style.color = status === 'error' ? '#e06b5a' : status === 'offline' ? '#f5a623' : '#5a9e4b';
+}
+
+function getWeekData(weekStart) {
+  const key = weekKey(weekStart);
+  if (!data[key]) data[key] = {};
+  return data[key];
+}
+
+// ===== CATEGORIZZAZIONE =====
+function categorizzaSingolo(testo) {
+  if (!testo || !testo.trim()) return null;
+  const t = testo.toLowerCase().trim();
+  // Override esplicito per parole chiave ambigue
+  const overrides = {
+    'omelette': 'uova', 'frittata': 'uova', 'uovo': 'uova', 'uova': 'uova',
+    'strapazzate': 'uova', 'uova sode': 'uova', 'uova fritte': 'uova',
+    'piadina': 'cereali', 'piadine': 'cereali', 'pizzoccheri': 'cereali',
+    'prosciutto': 'salumi', 'bresaola': 'salumi', 'salame': 'salumi',
+    'mortadella': 'salumi', 'speck': 'salumi', 'coppa': 'salumi',
+  };
+  for (const [kw, cat] of Object.entries(overrides)) {
+    if (t.includes(kw)) return cat;
+  }
+  // Ordine garantito delle categorie
+  const ordine = ['dolci','olio','semi','avocado','frutta','verdura','cereali','latticini','legumi','uova','pesce','carne','salumi'];
+  for (const cat of ordine) {
+    const info = CATEGORIE[cat];
+    if (!info) continue;
+    for (const kw of info.keywords) {
+      if (t.includes(kw)) return cat;
+    }
+  }
+  return null;
+}
+
+function isHalfPortion(s) {
+  return /^(poco|poca|pochi|poche|mezzo|mezza)\s+/i.test(s.trim());
+}
+
+function categorizzaVoci(testo) {
+  if (!testo) return [];
+  return testo.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).map(s => ({
+    testo: s,
+    cat: categorizzaSingolo(s),
+    metà: isHalfPortion(s)
+  }));
+}
+
+function categorizzaAlimento(testo) {
+  const voci = categorizzaVoci(testo);
+  if (!voci.length) return null;
+  const found = voci.find(v => v.cat);
+  return found ? found.cat : null;
+}
+
+// ===== TAG EDITOR =====
+function buildTagEditor(slotKey, wData, readOnly) {
+  const editor = document.createElement('div');
+  editor.className = 'meal-editor';
+
+  function getItems() {
+    const val = wData[slotKey] || '';
+    return val.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  function setItems(arr) {
+    wData[slotKey] = arr.join(', ');
+    saveData();
+    renderFiche();
+  }
+
+  function rebuildChips() {
+    editor.innerHTML = '';
+    const items = getItems();
+    items.forEach((text, idx) => {
+      const cat = categorizzaSingolo(text);
+      const chip = document.createElement('span');
+      chip.className = 'meal-chip';
+      if (cat) {
+        const info = CATEGORIE[cat];
+        chip.style.background = info.light;
+        chip.style.color = info.text;
+        chip.style.borderColor = info.colore + '55';
+      }
+      const label = document.createElement('span');
+      label.textContent = text;
+      chip.appendChild(label);
+      if (!readOnly) {
+        const x = document.createElement('span');
+        x.className = 'meal-chip-x';
+        x.textContent = '×';
+        x.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          const arr = getItems();
+          arr.splice(idx, 1);
+          setItems(arr);
+          rebuildChips();
+        });
+        chip.appendChild(x);
+      }
+      editor.appendChild(chip);
+    });
+
+    if (!readOnly) {
+      const inp = document.createElement('input');
+      inp.className = 'meal-tag-input';
+      inp.type = 'text';
+      inp.placeholder = '';
+      inp.addEventListener('keydown', function(e) {
+        if ((e.key === ',' || e.key === 'Enter') && this.value.trim()) {
+          e.preventDefault();
+          const arr = getItems();
+          arr.push(this.value.trim());
+          setItems(arr);
+          this.value = '';
+          rebuildChips();
+          editor.querySelector('.meal-tag-input').focus();
+        } else if (e.key === 'Backspace' && this.value === '') {
+          const arr = getItems();
+          if (arr.length > 0) {
+            const removed = arr.pop();
+            setItems(arr);
+            rebuildChips();
+            const newInp = editor.querySelector('.meal-tag-input');
+            newInp.value = removed;
+            newInp.focus();
+            newInp.setSelectionRange(removed.length, removed.length);
+          }
+        }
+      });
+      inp.addEventListener('blur', function() {
+        if (this.value.trim()) {
+          const arr = getItems();
+          arr.push(this.value.trim());
+          setItems(arr);
+          this.value = '';
+          rebuildChips();
+        }
+      });
+      editor.appendChild(inp);
+      editor.addEventListener('click', function() {
+        const i = editor.querySelector('.meal-tag-input');
+        if (i) i.focus();
+      });
+    }
+  }
+
+  rebuildChips();
+  return editor;
+}
+
+// ===== RENDER SETTIMANA =====
+function renderWeek() {
+  const ws = viewingWeekStart || currentWeekStart;
+  const wData = getWeekData(ws);
+  const key = weekKey(ws);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const isCurrentWeek = weekKey(ws) === weekKey(currentWeekStart);
+
+  document.getElementById('weekLabel').textContent =
+    ws.toLocaleDateString('it-IT', { day:'numeric', month:'long' }) + ' – ' +
+    new Date(ws.getTime() + 6*86400000).toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('headerWeek').textContent = 'Settimana ' + weekKey(ws).split('-W')[1];
+
+  // Grid
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < 7; i++) {
+    const dayDate = new Date(ws.getTime() + i * 86400000);
+    const isToday = dayDate.getTime() === today.getTime();
+    const dayShort = GIORNI[i].slice(0,3).toUpperCase();
+
+    const col = document.createElement('div');
+    col.className = 'day-col';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'day-header' + (isToday ? ' today' : '');
+    hdr.innerHTML = `<span class="day-num">${dayDate.getDate()}</span>${dayShort}`;
+    col.appendChild(hdr);
+
+    const mealsDiv = document.createElement('div');
+    mealsDiv.className = 'meals-col';
+
+    PASTI.forEach(pasto => {
+      const slotKey = `d${i}_${pasto.id}`;
+      const val = wData[slotKey] || '';
+
+      const slot = document.createElement('div');
+      slot.className = 'meal-slot';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'meal-label';
+      lbl.textContent = pasto.label;
+      slot.appendChild(lbl);
+
+      const readOnly = !isCurrentWeek && viewingWeekStart !== null;
+      const editor = buildTagEditor(slotKey, wData, readOnly);
+      if (readOnly) editor.style.opacity = '0.7';
+
+      slot.appendChild(editor);
+      mealsDiv.appendChild(slot);
+    });
+
+    col.appendChild(mealsDiv);
+    grid.appendChild(col);
+  }
+
+  renderFiche();
+}
+
+// ===== FICHE =====
+function contaFiche(weekStart) {
+  const wData = getWeekData(weekStart);
+  const counts = {};
+  Object.keys(CATEGORIE).forEach(c => counts[c] = 0);
+  Object.values(wData).forEach(val => {
+    categorizzaVoci(val).forEach(voce => {
+      if (voce.cat) counts[voce.cat] += voce.metà ? 0.5 : 1;
+    });
+  });
+  return counts;
+}
+
+function renderFiche() {
+  const ws = viewingWeekStart || currentWeekStart;
+  const counts = contaFiche(ws);
+  const grid = document.getElementById('ficheGrid');
+  grid.innerHTML = '';
+
+  const ordineBase = ['verdura','olio','frutta','cereali','latticini','semi','avocado','legumi','uova','pesce','salumi','carne','dolci'];
+  const getTarget = cat => CATEGORIE[cat].settimana || (CATEGORIE[cat].giorni ? CATEGORIE[cat].giorni * 7 : 0);
+  const getStatus = cat => {
+    const t = getTarget(cat);
+    const u = counts[cat] || 0;
+    if (!t) return 0;
+    if (u >= t) return 2; // esaurita
+    if (u >= t - 1) return 1; // quasi al limite
+    return 0; // ok
+  };
+  const ordineVisivo = [
+    ...ordineBase.filter(cat => getStatus(cat) === 0),
+    ...ordineBase.filter(cat => getStatus(cat) === 1),
+    ...ordineBase.filter(cat => getStatus(cat) === 2),
+  ];
+  ordineVisivo.forEach(cat => {
+    const info = CATEGORIE[cat];
+    const usate = counts[cat] || 0;
+    const target = info.settimana || (info.giorni ? info.giorni * 7 : 0);
+
+    const item = document.createElement('div');
+    item.className = 'fiche-item';
+    item.style.background = info.light;
+    item.style.color = info.text;
+
+    const dots = [];
+    const maxDots = Math.max(target || 4, Math.ceil(usate));
+    for (let i = 0; i < maxDots; i++) {
+      const dot = document.createElement('div');
+      const filled = usate >= i + 1;
+      const half = !filled && usate >= i + 0.5;
+      const over = target && i >= target;
+      dot.className = 'fiche-dot' + (filled ? (over ? ' over' : ' filled') : half ? ' half' : '');
+      dot.style.borderColor = info.colore;
+      if (filled) dot.style.backgroundColor = info.colore;
+      else if (half) {
+        dot.style.background = `linear-gradient(90deg, ${info.colore} 50%, transparent 50%)`;
+      dot.style.opacity = '1';
+      }
+      dots.push(dot.outerHTML);
+    }
+
+    const targetLine = info.giorni && info.settimana
+      ? `<div class="fiche-targets">${info.giorni}/giorno · ${info.settimana}/settimana</div>`
+      : info.settimana
+        ? `<div class="fiche-targets">${info.settimana}/settimana</div>`
+        : `<div class="fiche-targets">${usate} consumate</div>`;
+
+    // Warning/stop signals
+    let signal = '';
+    let signalStyle = '';
+    if (target) {
+      if (usate >= target) {
+        signal = '🚫';
+        signalStyle = 'background:#fce8e5;color:#7a1f10;border:1px solid #e06b5a44;';
+      } else if (usate >= target - 1 && usate < target) {
+        signal = '⚠️';
+        signalStyle = 'background:#fef3dc;color:#7a4f00;border:1px solid #f5a62344;';
+      }
+    }
+
+    item.innerHTML = `
+      <div class="fiche-name" style="display:flex;align-items:center;gap:5px">
+        <span>${info.nome}</span>
+        ${signal ? `<span style="font-size:14px">${signal}</span>` : ''}
+      </div>
+      ${targetLine}
+      <div class="fiche-progress">${dots.join('')}</div>
+      <div style="font-size:11px;margin-top:2px;font-weight:500">${Number.isInteger(usate) ? usate : usate.toFixed(1)}${target ? ` / ${target}` : ''} porzioni${signal === '🚫' ? ' — limite raggiunto!' : signal === '⚠️' ? ' — quasi al limite' : ''}</div>
+    `;
+    if (signalStyle) item.setAttribute('style', item.getAttribute('style') + ';' + signalStyle);
+    grid.appendChild(item);
+  });
+}
+
+// ===== TABS =====
+function showTab(tab) {
+  // map friendly name to actual div id
+  const idMap = { 'settimana':'tab-settimana', 'fiche':'tab-fiche', 'archivio':'tab-archivio', 'guida':'tab-guida' };
+  Object.values(idMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const active = document.getElementById(idMap[tab]);
+  if (active) active.style.display = '';
+  document.querySelectorAll('.tab').forEach((el,i) => {
+    el.classList.toggle('active', ['settimana','fiche','archivio','guida'][i] === tab);
+  });
+  if (tab === 'archivio') renderArchive();
+  if (tab === 'fiche') renderFicheConfig();
+  if (tab === 'settimana') renderLegend();
+}
+
+// ===== LEGENDA =====
+function renderLegend() {
+  const lg = document.getElementById('legendGrid');
+  if (!lg) return;
+  lg.innerHTML = Object.entries(CATEGORIE).map(([cat, info]) =>
+    `<div class="legend-item">
+      <div class="legend-swatch" style="background:${info.colore}"></div>
+      <span>${info.nome}</span>
+    </div>`
+  ).join('');
+}
+
+// ===== FICHE CONFIG =====
+function renderFicheConfig() {
+  const cfg = document.getElementById('ficheConfig');
+  cfg.innerHTML = Object.entries(CATEGORIE).map(([cat, info]) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:${info.light};border-radius:8px;color:${info.text}">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${info.nome}</div>
+        <div style="font-size:11px;opacity:0.8">${info.keywords.slice(0,5).join(', ')}…</div>
+      </div>
+      <div style="text-align:right;font-size:11px">
+        ${info.giorni ? `<div>${info.giorni} porzioni/giorno</div>` : ''}
+        ${info.settimana ? `<div>${info.settimana} porzioni/settimana</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== ARCHIVIO =====
+function renderArchive() {
+  const list = document.getElementById('archiveList');
+  const weeks = Object.keys(data).sort().reverse();
+  if (weeks.length === 0) {
+    list.innerHTML = '<div class="archive-empty">Nessuna settimana salvata ancora.</div>';
+    return;
+  }
+  list.innerHTML = weeks.map(wk => {
+    const [year, w] = wk.split('-W');
+    return `
+      <div class="archive-item" onclick="viewArchivedWeek('${wk}')">
+        <span>Settimana ${w} — ${year}</span>
+        <span style="font-size:11px;color:var(--text-muted)">→ visualizza</span>
+      </div>`;
+  }).join('');
+}
+
+function viewArchivedWeek(weekKey) {
+  const [year, w] = weekKey.split('-W');
+  const jan4 = new Date(year, 0, 4);
+  const weekNum = parseInt(w);
+  const ms = jan4.getTime() + (weekNum - 1) * 7 * 86400000 - (jan4.getDay() + 6) % 7 * 86400000;
+  viewingWeekStart = getMonday(new Date(ms));
+  showTab('settimana');
+  renderWeek();
+  toast('Stai visualizzando una settimana archiviata');
+}
+
+function showArchive() { showTab('archivio'); }
+
+// ===== WEEK NAV =====
+function prevWeek() {
+  const ws = viewingWeekStart || currentWeekStart;
+  viewingWeekStart = new Date(ws.getTime() - 7*86400000);
+  renderWeek();
+}
+
+function nextWeek() {
+  const ws = viewingWeekStart || currentWeekStart;
+  const next = new Date(ws.getTime() + 7*86400000);
+  if (next > currentWeekStart) {
+    viewingWeekStart = null;
+  } else {
+    viewingWeekStart = next;
+  }
+  renderWeek();
+}
+
+function newWeek() {
+  viewingWeekStart = null;
+  currentWeekStart = getMonday(new Date());
+  renderWeek();
+  toast('Nuova settimana! ✨');
+}
+
+// ===== TOAST =====
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===== INIT =====
+loadData();
+renderWeek();
+renderLegend();
+</script>
+</body>
+</html>
