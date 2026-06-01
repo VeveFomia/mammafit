@@ -1159,6 +1159,18 @@ function renderWorkoutFiche(weekStart) {
     `;
     grid.appendChild(item);
   });
+
+  // Workout time card settimanale
+  const totMin = calcolaMinutiSettimana(weekStart);
+  const timeCard = document.createElement('div');
+  timeCard.className = 'fiche-item';
+  timeCard.setAttribute('style', 'background:#f0f4ff;color:#2a3a7a;border:1px solid #b0c0f055;grid-column: span 1;');
+  timeCard.innerHTML = `
+    <div class="fiche-name">⏱ Workout time</div>
+    <div class="fiche-targets">totale settimana</div>
+    <div style="font-size:22px;font-weight:300;font-family:'Fraunces',serif;margin-top:6px;letter-spacing:-0.5px">${formatMinuti(totMin)}</div>
+  `;
+  grid.appendChild(timeCard);
 }
 
 function buildWorkoutEditor(slotKey, weekKey) {
@@ -1283,7 +1295,7 @@ function renderWorkoutWeek() {
     const hdr = document.createElement('div');
     hdr.className = 'day-header' + (isToday ? ' today' : '');
     const dayMins = calcolaMinutiGiorno(wKey, i);
-    hdr.innerHTML = `<span class="day-num">${dayDate.getDate()}</span>${dayShort}${dayMins > 0 ? `<span style="display:block;font-size:9px;margin-top:2px;opacity:0.85">${formatMinuti(dayMins)}</span>` : ''}`;
+    hdr.innerHTML = `<span class="day-num">${dayDate.getDate()}</span>${dayShort}${dayMins > 0 ? `<span style="display:block;font-size:11px;font-weight:600;margin-top:3px;letter-spacing:0.02em">⏱ ${formatMinuti(dayMins)}</span>` : ''}`;
     col.appendChild(hdr);
 
     const mealsDiv = document.createElement('div');
