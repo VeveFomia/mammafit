@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Nutrizione 🤱">
-<title>Nutrizione in Gravidanza</title>
+<meta name="apple-mobile-web-app-title" content="Mamma Fit 🤱">
+<title>Mamma Fit</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -327,7 +327,7 @@ h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 400; }
 
 <div class="header">
   <div>
-    <div class="header-title">Nutrizione in gravidanza 🤱</div>
+    <div class="header-title">Mamma Fit 🤱</div>
     <div class="header-week" id="headerWeek"></div>
     <div id="syncIndicator" style="font-size:11px;margin-top:2px;">🔄 Caricamento...</div>
   </div>
@@ -340,10 +340,25 @@ h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 400; }
 <div class="container">
 
   <div class="tabs">
-    <button class="tab active" onclick="showTab('settimana')">Settimana</button>
+    <button class="tab" onclick="showTab('workout')">🏋️ Allenamenti</button>
+    <button class="tab active" onclick="showTab('settimana')">🥗 Alimentazione</button>
     <button class="tab" onclick="showTab('fiche')">Porzioni & obiettivi</button>
     <button class="tab" onclick="showTab('archivio')">Archivio</button>
     <button class="tab" onclick="showTab('guida')">Guida</button>
+  </div>
+
+  <!-- TAB WORKOUT -->
+  <div id="tab-workout" style="display:none">
+    <div class="week-nav">
+      <span class="week-label" id="workoutWeekLabel"></span>
+      <button class="btn" onclick="prevWeekWorkout()">← Settimana precedente</button>
+      <button class="btn" onclick="nextWeekWorkout()">Settimana successiva →</button>
+    </div>
+    <div class="fiche-panel">
+      <h3>Obiettivi allenamento settimana</h3>
+      <div class="fiche-grid" id="workoutGrid"></div>
+    </div>
+    <div class="week-grid" id="workoutWeekGrid"></div>
   </div>
 
   <!-- TAB SETTIMANA -->
@@ -390,12 +405,18 @@ h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 400; }
     <div class="fiche-panel">
       <h3>Come funziona</h3>
       <div style="font-size:13px;line-height:1.8;color:var(--text-muted);display:flex;flex-direction:column;gap:10px;">
+        <p style="font-size:15px;color:var(--accent);font-family:'Fraunces',serif;font-style:italic">🥗 Guida alimentazione</p>
         <p><strong style="color:var(--text)">Inserisci i pasti</strong> — scrivi cosa hai mangiato in ogni casella. L'app riconosce automaticamente la categoria (frutta, verdura, pesce…) e colora la cella del colore corrispondente.</p>
-        <p><strong style="color:var(--text)">Porzioni visive</strong> — in cima alla settimana vedi quante "porzioni" di ogni categoria hai usato. I pallini pieni = porzioni consumate. Grigio = ancora disponibili.</p>
-        <p><strong style="color:var(--text)">Obiettivi</strong> — gli obiettivi giornalieri e settimanali sono pre-impostati secondo le linee guida ospedaliere. Puoi modificarli nella scheda "Porzioni & obiettivi".</p>
-        <p><strong style="color:var(--text)">Archivio</strong> — ogni settimana viene salvata automaticamente. Clicca "Archivio" per rivedere le settimane passate.</p>
-        <p><strong style="color:var(--text)">Salva sul desktop</strong> — su Safari: tocca Condividi → "Aggiungi alla schermata Home". Su Mac: File → "Aggiungi alla Dock". I dati rimangono salvati nel browser.</p>
+        <p><strong style="color:var(--text)">Porzioni visive</strong> — in cima vedi quante porzioni di ogni categoria hai usato. I pallini pieni = consumate. Grigio = ancora disponibili.</p>
+        <p><strong style="color:var(--text)">Obiettivi</strong> — pre-impostati secondo le linee guida della Fondazione IRCCS San Gerardo dei Tintori.</p>
         <p><strong style="color:var(--text)">Consigli dall'ospedale</strong> — bevi ≥ 2L di acqua al giorno · evita digiuni lunghi · preferisci cereali integrali · riduci zuccheri e caffeina · evita il fegato (troppa vitamina A).</p>
+        <p style="font-size:15px;color:#7b68c4;font-family:'Fraunces',serif;font-style:italic;margin-top:10px">🏋️ Guida allenamenti</p>
+        <p><strong style="color:var(--text)">Inserisci gli allenamenti</strong> — scrivi cosa hai fatto in ogni fascia oraria. L'app riconosce automaticamente la categoria (stretching, abs, spalla…) e colora la cella.</p>
+        <p><strong style="color:var(--text)">Obiettivi workout</strong> — stretching 5/sett · spalla 5/sett · post-meal 7/sett (1/giorno) · abs 3/sett · total body 3/sett · tricipiti 2/sett.</p>
+        <p><strong style="color:var(--text)">⚠️ Attenzione giovedì</strong> — se una categoria non è ancora stata fatta quella settimana, giovedì schizza in cima con un avviso.</p>
+        <p><strong style="color:var(--text)">🏆 Quando sfori</strong> — se fai più allenamenti del target, l'app ti fa i complimenti! La categoria va in fondo perché hai già superato l'obiettivo.</p>
+        <p><strong style="color:var(--text)">Archivio</strong> — ogni settimana viene salvata. Clicca "Archivio" per rivedere sia alimentazione che allenamenti.</p>
+        <p><strong style="color:var(--text)">Salva sul desktop</strong> — su Safari: Condividi → "Aggiungi alla schermata Home". Su Mac: File → "Aggiungi alla Dock".</p>
       </div>
     </div>
   </div>
@@ -407,15 +428,16 @@ h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 400; }
 <script>
 // ===== CONFIGURAZIONE CATEGORIE =====
 const CATEGORIE = {
-  dolci:     { nome: 'Dolci',              colore: '#e484b3', light: '#fce8f3', text: '#7a1f50', giorni: null, settimana: 2,  keywords: ['torta','gelato','budino','crostata','muffin','dolce','dessert','tiramisù','panna cotta','caramella','snack dolce','nutella','cioccolato','brioche','galbusera','oro saiwa','cioccoro','saiwa','crackers al cioccolato','cracker cioccolato','crackers riso cioccolato','crackers riso latte','crackers cioccolato latte','crackers cioccolato fondente','cracker riso','frollini','frollino','marmellata','confettura','miele'] },
+  salse:     { nome: 'Salse',             colore: '#c4784a', light: '#f5e8d8', text: '#6b3010', giorni: null, settimana: 2, keywords: ['maionese','mayo','ketchup','barbecue','salsa barbecue','salsa','senape','salsa piccante','sriracha','salsa di soia','worcestershire','ranch','salsa rosa','cocktail','tzatziki','aioli'] },
+  dolci:     { nome: 'Dolci',              colore: '#e484b3', light: '#fce8f3', text: '#7a1f50', giorni: null, settimana: 2,  keywords: ['torta','gelato','budino','crostata','muffin','dolce','dessert','tiramisù','panna cotta','caramella','snack dolce','nutella','cioccolato','brioche','galbusera','oro saiwa','cioccoro','saiwa','crackers al cioccolato','cracker cioccolato','crackers riso cioccolato','crackers riso latte','crackers cioccolato latte','crackers cioccolato fondente','cracker riso','frollini','frollino','marmellata','confettura','miele','dulce de leche','dulce','gocce di cioccolato','gocce cioccolato'] },
   olio:      { nome: 'Olio e olive',       colore: '#8bc34a', light: '#e8f5d8', text: '#3a5a10', giorni: 3,  settimana: 21, keywords: ['olio','olive','olio di oliva','evo','olio evo'] },
   semi:      { nome: 'Semi e frutta secca',colore: '#a0784a', light: '#f2e8d8', text: '#5a3a10', giorni: 2,  settimana: 14, keywords: ['semi','semi misti','semi di zucca','semi di girasole','semi di lino','semi di chia','semi di sesamo','semi di canapa','semi di papavero','frutta secca','pistacchi','pistacchio','noci','mandorle','nocciole','anacardi','pinoli','cashew','arachidi','mix di frutta secca'] },
-  avocado:   { nome: 'Avocado',            colore: '#6aaa5a', light: '#e2f5dc', text: '#2a5a20', giorni: null, settimana: 2, keywords: ['avocado'] },
-  frutta:    { nome: 'Frutta',             colore: '#f5a623', light: '#fef3dc', text: '#7a4f00', giorni: 2,  settimana: 14, keywords: ['mela','mele','pera','pere','banana','banane','arancia','arance','kiwi','kiwi giallo','fragola','fragole','uva','mango','pesca','pesche','albicocca','albicocche','prugna','prugne','ciliegia','ciliegie','melone','cocomero','ananas','pompelmo','pompelmi','limone','limoni','mandarino','mandarini','fico','fichi','lampone','lamponi','mora','more','mirtillo','mirtilli','melograno','frutta','macedonia','succo di frutta','smoothie'] },
-  verdura:   { nome: 'Verdura',            colore: '#5a9e4b', light: '#e8f5e3', text: '#2a5220', giorni: 3,  settimana: 21, keywords: ['zucchine','carota','carote','broccoli','spinaci','insalata','pomodoro','pomodorini','pomodori','cetriolo','peperone','peperoni','peperoncino','melanzana','cavolfiore','cavolo','sedano','finocchio','finocchi','piselli','asparago','asparagi','carciofo','carciofi','fagiolino','fagiolini','lattuga','rucola','bietola','cipolla','aglio','cime di rapa','rapini','verza','radicchio','cicoria','indivia','erbette','verdura','minestrone','zuppa di verdure','passato','vellutata','verdure'] },
-  cereali:   { nome: 'Cereali',            colore: '#c4924a', light: '#f7edd8', text: '#6b4a1a', giorni: 2,  settimana: 14, keywords: ['pasta','riso','pane','couscous','farro','orzo','avena','polenta','grissini','cereali','pancakes','fette biscottate','gallette','tortillas','gnocchi','quinoa','piadina','piadine','focaccia','pizza','tigelle','pizzoccheri','biscotti','biscotto','sciat','sciatt'] },
-  latticini: { nome: 'Latticini',          colore: '#5b9bd5', light: '#deeef9', text: '#1a4a7a', giorni: 2,  settimana: 14, keywords: ['latte','yogurt','formaggio','mozzarella','ricotta','parmigiano','grana','brie','provolone','scamorza','gorgonzola','pecorino','feta','sottiletta','sottilette','emmental','asiago','fontina','taleggio','caciotta','caciocavallo','stracchino','crescenza','robiola','primosale','quartirolo','squacquerone','Philadelphia','fiocchi di latte','kefir','latte di soia','latticini','burro'] },
-  legumi:    { nome: 'Legumi',             colore: '#9b7fd4', light: '#ede7f9', text: '#4a2d8a', giorni: null, settimana: 5, keywords: ['fagioli','lenticchie','ceci','soia','edamame','lupini','fave','legumi','hummus','tofu','cotoletta veggy','cotoletta veg','veggy','veggie burger','burger vegetale','burger veg','polpette veg','proteina di pisello','proteina vegetale','kioene','cotolette spinaci','spinaci kioene','cotoletta spinaci','polpette spinaci','burger spinaci'] },
+  avocado:   { nome: 'Avocado',            colore: '#6aaa5a', light: '#e2f5dc', text: '#2a5a20', giorni: null, settimana: 2, keywords: ['avocado','guacamole'] },
+  frutta:    { nome: 'Frutta',             colore: '#f5a623', light: '#fef3dc', text: '#7a4f00', giorni: 2,  settimana: 14, keywords: ['mela','mele','pera','pere','banana','banane','datteri','dattero','arancia','arance','kiwi','kiwi giallo','fragola','fragole','uva','mango','pesca','pesche','albicocca','albicocche','prugna','prugne','ciliegia','ciliegie','melone','cocomero','ananas','pompelmo','pompelmi','limone','limoni','mandarino','mandarini','fico','fichi','lampone','lamponi','mora','more','mirtillo','mirtilli','melograno','frutta','macedonia','succo di frutta','smoothie'] },
+  verdura:   { nome: 'Verdura',            colore: '#5a9e4b', light: '#e8f5e3', text: '#2a5220', giorni: 3,  settimana: 21, keywords: ['zucchine','carota','carote','broccoli','spinaci','insalata','pomodoro','pomodorini','pomodori','cetriolo','cetrioli','peperone','peperoni','peperoncino','melanzana','cavolfiore','cavolo','sedano','finocchio','finocchi','piselli','asparago','asparagi','carciofo','carciofi','fagiolino','fagiolini','lattuga','rucola','bietola','cipolla','aglio','cime di rapa','rapini','verza','radicchio','cicoria','indivia','erbette','verdura','minestrone','zuppa di verdure','passato','vellutata','verdure','coriandolo'] },
+  cereali:   { nome: 'Cereali',            colore: '#c4924a', light: '#f7edd8', text: '#6b4a1a', giorni: 2,  settimana: 14, keywords: ['pasta','riso','pane','couscous','farro','orzo','avena','polenta','grissini','cereali','pancakes','fette biscottate','gallette','tortillas','gnocchi','quinoa','piadina','piadine','focaccia','pizza','tigelle','pizzoccheri','biscotti','biscotto','sciat','sciatt','waffle','waffles','nachos','mais','quesadilla','quesadillas','tortilla'] },
+  latticini: { nome: 'Latticini',          colore: '#5b9bd5', light: '#deeef9', text: '#1a4a7a', giorni: 2,  settimana: 14, keywords: ['latte','yogurt','skyr','formaggio','mozzarella','ricotta','parmigiano','grana','brie','provolone','scamorza','gorgonzola','pecorino','feta','sottiletta','sottilette','emmental','asiago','fontina','taleggio','caciotta','caciocavallo','stracchino','crescenza','robiola','primosale','quartirolo','squacquerone','Philadelphia','fiocchi di latte','kefir','latte di soia','latticini','burro'] },
+  legumi:    { nome: 'Legumi',             colore: '#9b7fd4', light: '#ede7f9', text: '#4a2d8a', giorni: null, settimana: 5, keywords: ['fagioli','lenticchie','ceci','soia','edamame','lupini','fave','legumi','hummus','tofu','nuggets vegetali','nuggets veg','burger di legumi','cotoletta veggy','cotoletta veg','veggy','veggie burger','burger vegetale','burger veg','polpette veg','proteina di pisello','proteina vegetale','kioene','cotolette spinaci','spinaci kioene','cotoletta spinaci','polpette spinaci','burger spinaci'] },
   uova:      { nome: 'Uova',               colore: '#e8b84b', light: '#fdf3d8', text: '#7a5a00', giorni: null, settimana: 2, keywords: ['omelette','uovo','uova','frittata','uova strapazzate','uova sode','uova fritte','egg','eggs'] },
   pesce:     { nome: 'Pesce',              colore: '#4ab8c4', light: '#d8f3f6', text: '#1a5f6a', giorni: null, settimana: 2, keywords: ['salmone','tonno','merluzzo','branzino','orata','sardina','sgombro','alice','trota','halibut','sogliola','baccalà','polpo','gamberi','calamari','cozze','vongole','pesce','frutti di mare','sushi'] },
   carne:     { nome: 'Carne',              colore: '#e06b5a', light: '#fce8e5', text: '#7a1f10', giorni: null, settimana: 2, keywords: ['pollo','tacchino','manzo','vitello','maiale','agnello','coniglio','anatra','bistecca','hamburger','cotoletta','scaloppina','arrosto','spezzatino','carne','wurstel'] },
@@ -528,7 +550,7 @@ function categorizzaSingolo(testo) {
     if (t.includes(kw)) return cat;
   }
   // Ordine garantito delle categorie
-  const ordine = ['dolci','olio','semi','avocado','frutta','verdura','cereali','latticini','legumi','uova','pesce','carne','salumi'];
+  const ordine = ['dolci','salse','olio','semi','avocado','frutta','verdura','cereali','latticini','legumi','uova','pesce','carne','salumi'];
   for (const cat of ordine) {
     const info = CATEGORIE[cat];
     if (!info) continue;
@@ -539,17 +561,48 @@ function categorizzaSingolo(testo) {
   return null;
 }
 
+const ALWAYS_HALF = ['coriandolo'];
+const MULTI_CAT = {
+  'quesadilla': ['cereali', 'latticini'],
+  'quesadillas': ['cereali', 'latticini'],
+};
+const NO_PORTION = ['gocce di cioccolato','gocce cioccolato'];
+
 function isHalfPortion(s) {
-  return /^(poco|poca|pochi|poche|mezzo|mezza)\s+/i.test(s.trim());
+  const t = s.toLowerCase().trim();
+  if (ALWAYS_HALF.some(kw => t.includes(kw))) return true;
+  return /^(poco|poca|pochi|poche|mezzo|mezza)\s+/i.test(t);
+}
+
+function isNoPortion(s) {
+  const t = s.toLowerCase().trim();
+  return NO_PORTION.some(kw => t.includes(kw));
 }
 
 function categorizzaVoci(testo) {
   if (!testo) return [];
-  return testo.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).map(s => ({
-    testo: s,
-    cat: categorizzaSingolo(s),
-    metà: isHalfPortion(s)
-  }));
+  const result = [];
+  testo.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).forEach(s => {
+    const t = s.toLowerCase().trim();
+    const half = isHalfPortion(s);
+    const noPorzione = isNoPortion(s);
+    // Check multi-category foods
+    for (const [kw, cats] of Object.entries(MULTI_CAT)) {
+      if (t.includes(kw)) {
+        cats.forEach((cat, i) => {
+          result.push({ testo: i === 0 ? s : '', cat, metà: half, noPorzione });
+        });
+        return;
+      }
+    }
+    result.push({
+      testo: s,
+      cat: noPorzione ? null : categorizzaSingolo(s),
+      metà: half,
+      noPorzione
+    });
+  });
+  return result;
 }
 
 function categorizzaAlimento(testo) {
@@ -700,9 +753,7 @@ function renderWeek() {
       lbl.textContent = pasto.label;
       slot.appendChild(lbl);
 
-      const readOnly = !isCurrentWeek && viewingWeekStart !== null;
-      const editor = buildTagEditor(slotKey, wData, readOnly);
-      if (readOnly) editor.style.opacity = '0.7';
+      const editor = buildTagEditor(slotKey, wData, false);
 
       slot.appendChild(editor);
       mealsDiv.appendChild(slot);
@@ -716,13 +767,19 @@ function renderWeek() {
 }
 
 // ===== FICHE =====
+const COLAZIONE_NO_DOLCI = ['marmellata','confettura','miele','dulce de leche','dulce','gocce di cioccolato','gocce cioccolato'];
+
 function contaFiche(weekStart) {
   const wData = getWeekData(weekStart);
   const counts = {};
   Object.keys(CATEGORIE).forEach(c => counts[c] = 0);
-  Object.values(wData).forEach(val => {
+  Object.entries(wData).forEach(([slotKey, val]) => {
+    const isColazione = slotKey.includes('_colazione');
     categorizzaVoci(val).forEach(voce => {
-      if (voce.cat) counts[voce.cat] += voce.metà ? 0.5 : 1;
+      if (!voce.cat || voce.noPorzione) return;
+      const t = voce.testo.toLowerCase();
+      if (isColazione && voce.cat === 'dolci' && COLAZIONE_NO_DOLCI.some(kw => t.includes(kw))) return;
+      counts[voce.cat] += voce.metà ? 0.5 : 1;
     });
   });
   return counts;
@@ -734,7 +791,7 @@ function renderFiche() {
   const grid = document.getElementById('ficheGrid');
   grid.innerHTML = '';
 
-  const ordineBase = ['verdura','olio','frutta','cereali','latticini','semi','avocado','legumi','uova','pesce','salumi','carne','dolci'];
+  const ordineBase = ['verdura','olio','frutta','cereali','latticini','semi','legumi','avocado','uova','pesce','salumi','carne','salse','dolci'];
   const getTarget = cat => CATEGORIE[cat].settimana || (CATEGORIE[cat].giorni ? CATEGORIE[cat].giorni * 7 : 0);
   const getStatus = cat => {
     const t = getTarget(cat);
@@ -811,8 +868,7 @@ function renderFiche() {
 
 // ===== TABS =====
 function showTab(tab) {
-  // map friendly name to actual div id
-  const idMap = { 'settimana':'tab-settimana', 'fiche':'tab-fiche', 'archivio':'tab-archivio', 'guida':'tab-guida' };
+  const idMap = { 'workout':'tab-workout', 'settimana':'tab-settimana', 'fiche':'tab-fiche', 'archivio':'tab-archivio', 'guida':'tab-guida' };
   Object.values(idMap).forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -820,11 +876,12 @@ function showTab(tab) {
   const active = document.getElementById(idMap[tab]);
   if (active) active.style.display = '';
   document.querySelectorAll('.tab').forEach((el,i) => {
-    el.classList.toggle('active', ['settimana','fiche','archivio','guida'][i] === tab);
+    el.classList.toggle('active', ['workout','settimana','fiche','archivio','guida'][i] === tab);
   });
   if (tab === 'archivio') renderArchive();
   if (tab === 'fiche') renderFicheConfig();
   if (tab === 'settimana') renderLegend();
+  if (tab === 'workout') renderWorkoutWeek();
 }
 
 // ===== LEGENDA =====
@@ -918,6 +975,343 @@ function toast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===== WORKOUT =====
+const WORKOUT_CAT = {
+  stretching:  { nome: 'Stretching',        colore: '#7b68c4', light: '#ede7f9', text: '#3a2080', giorni: null, settimana: 5, keywords: ['stretching','stretch','flessibilità','mobilità'] },
+  spalla:      { nome: 'Spalla',             colore: '#e06b9a', light: '#fce8f0', text: '#7a1f50', giorni: null, settimana: 5, keywords: ['spalla','spalle','shoulder','rotator cuff','cuffia rotatori'] },
+  postmeal:    { nome: 'Post-meal',          colore: '#4ab8c4', light: '#d8f3f6', text: '#1a5f6a', giorni: null, settimana: 3, keywords: ['post-meal','post meal','post pasto','cammino','camminata','passeggiata','walk','walking'] },
+  totalbody:   { nome: 'Total body / Dance', colore: '#5a9e4b', light: '#e8f5e3', text: '#2a5220', giorni: null, settimana: 3, keywords: ['total body','totalbody','dance','danza','ballo','zumba','cardio','workout','allenamento','pilates','yoga','aerobica'] },
+  abs:         { nome: 'Abs',                colore: '#f5a623', light: '#fef3dc', text: '#7a4f00', giorni: null, settimana: 3, keywords: ['abs','addominali','core','plank','crunch'] },
+  tricipiti:   { nome: 'Tricipiti',          colore: '#c4924a', light: '#f7edd8', text: '#6b4a1a', giorni: null, settimana: 2, keywords: ['tricipiti','tricipite','triceps','dips','french press','kickback'] },
+};
+
+const WORKOUT_SLOTS = [
+  { id: 'appena_sveglia',  label: 'Appena sveglia' },
+  { id: 'post_colazione',  label: 'Post-colazione' },
+  { id: 'mattina',         label: 'Mattina' },
+  { id: 'dopo_pranzo',     label: 'Post-pranzo' },
+  { id: 'pomeriggio',      label: 'Pomeriggio' },
+  { id: 'post_cena',       label: 'Post-cena' },
+  { id: 'prima_dormire',   label: 'Prima di dormire' },
+];
+
+let workoutViewingWeek = null;
+
+function estraiMinuti(testo) {
+  if (!testo || !testo.trim()) return 0;
+  const t = testo.toLowerCase().trim();
+  let tot = 0;
+  // match "1h30", "1h 30", "1h30min"
+  const hm = t.match(/(\d+)\s*h\s*(\d+)/);
+  if (hm) return parseInt(hm[1]) * 60 + parseInt(hm[2]);
+  // match "1h", "2 ore"
+  const h = t.match(/(\d+)\s*(h|ora|ore)/);
+  if (h) tot += parseInt(h[1]) * 60;
+  // match "30min", "30 minuti", "30 min", "30m"
+  const m = t.match(/(\d+)\s*(min|minuti|minuto|m)\b/);
+  if (m) tot += parseInt(m[1]);
+  return tot;
+}
+
+function calcolaMinutiGiorno(wKey, dayIdx) {
+  const wData = data['workout_' + wKey] || {};
+  let tot = 0;
+  Object.entries(wData).forEach(([slotKey, val]) => {
+    if (!slotKey.startsWith('d' + dayIdx + '_')) return;
+    val.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).forEach(s => {
+      tot += estraiMinuti(s);
+    });
+  });
+  return tot;
+}
+
+function calcolaMinutiSettimana(weekStart) {
+  const wKey = weekKey(weekStart);
+  let tot = 0;
+  for (let i = 0; i < 7; i++) tot += calcolaMinutiGiorno(wKey, i);
+  return tot;
+}
+
+function formatMinuti(min) {
+  if (min === 0) return '0 min';
+  if (min < 60) return min + ' min';
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m > 0 ? h + 'h ' + m + 'min' : h + 'h';
+}
+
+function categorizzaWorkout(testo) {
+  if (!testo || !testo.trim()) return null;
+  const t = testo.toLowerCase().trim();
+  for (const [cat, info] of Object.entries(WORKOUT_CAT)) {
+    for (const kw of info.keywords) {
+      if (t.includes(kw)) return cat;
+    }
+  }
+  return null;
+}
+
+function contaWorkout(weekStart) {
+  const key = weekKey(weekStart);
+  const wData = data['workout_' + key] || {};
+  const counts = {};
+  Object.keys(WORKOUT_CAT).forEach(c => counts[c] = 0);
+  Object.values(wData).forEach(val => {
+    val.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).forEach(s => {
+      const cat = categorizzaWorkout(s);
+      if (cat) counts[cat]++;
+    });
+  });
+  return counts;
+}
+
+function renderWorkoutFiche(weekStart) {
+  const counts = contaWorkout(weekStart);
+  const grid = document.getElementById('workoutGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const today = new Date();
+  const isThursday = today.getDay() === 4;
+  const ws = weekStart;
+  const isCurrentWeek = weekKey(ws) === weekKey(currentWeekStart);
+
+  // Order: by target desc, exceeded last
+  const ordineBase = ['stretching','spalla','postmeal','totalbody','abs','tricipiti'];
+  const getStatus = cat => {
+    const t = WORKOUT_CAT[cat].settimana;
+    const u = counts[cat] || 0;
+    if (u > t) return 2; // superato — complimenti!
+    if (u === t) return 1; // raggiunto
+    return 0; // in corso
+  };
+
+  // Thursday urgency: not started yet
+  const needsUrgency = cat => isCurrentWeek && isThursday && (counts[cat] || 0) === 0;
+
+  const ordineVisivo = [
+    ...ordineBase.filter(cat => needsUrgency(cat) && getStatus(cat) === 0),
+    ...ordineBase.filter(cat => !needsUrgency(cat) && getStatus(cat) === 0),
+    ...ordineBase.filter(cat => getStatus(cat) === 1),
+    ...ordineBase.filter(cat => getStatus(cat) === 2),
+  ];
+
+  ordineVisivo.forEach(cat => {
+    const info = WORKOUT_CAT[cat];
+    const usate = counts[cat] || 0;
+    const target = info.settimana;
+    const status = getStatus(cat);
+    const urgent = needsUrgency(cat);
+
+    let signal = '';
+    let bgStyle = '';
+    if (status === 2) {
+      signal = '🏆';
+      bgStyle = 'background:#e8f5e3;border:1px solid #5a9e4b44;';
+    } else if (status === 1) {
+      signal = '✅';
+      bgStyle = 'background:#e8f5e3;';
+    } else if (urgent) {
+      signal = '⚠️';
+      bgStyle = 'background:#fef3dc;border:1px solid #f5a62366;';
+    }
+
+    const dots = [];
+    const maxDots = Math.max(target, usate);
+    for (let i = 0; i < maxDots; i++) {
+      const filled = i < usate;
+      const over = i >= target;
+      const dot = document.createElement('div');
+      dot.className = 'fiche-dot' + (filled ? (over ? ' over' : ' filled') : '');
+      dot.style.borderColor = info.colore;
+      if (filled) dot.style.backgroundColor = over ? '#5a9e4b' : info.colore;
+      dots.push(dot.outerHTML);
+    }
+
+    const item = document.createElement('div');
+    item.className = 'fiche-item';
+    item.setAttribute('style', `background:${info.light};color:${info.text};${bgStyle}`);
+
+    const targetLine = info.giorni
+      ? `<div class="fiche-targets">${info.giorni}/giorno · ${info.settimana}/settimana</div>`
+      : `<div class="fiche-targets">${info.settimana}/settimana</div>`;
+
+    const msgExtra = status === 2
+      ? `<div style="font-size:11px;color:#2a5220;font-weight:600;margin-top:2px">Bravissima! Obiettivo superato! 🎉</div>`
+      : urgent
+      ? `<div style="font-size:11px;color:#7a4f00;font-weight:600;margin-top:2px">Ricordati di farlo questa settimana!</div>`
+      : '';
+
+    item.innerHTML = `
+      <div class="fiche-name" style="display:flex;align-items:center;gap:5px">
+        <span>${info.nome}</span>
+        ${signal ? `<span style="font-size:14px">${signal}</span>` : ''}
+      </div>
+      ${targetLine}
+      <div class="fiche-progress">${dots.join('')}</div>
+      <div style="font-size:11px;margin-top:2px;font-weight:500">${usate} / ${target} allenamenti</div>
+      ${msgExtra}
+    `;
+    grid.appendChild(item);
+  });
+}
+
+function buildWorkoutEditor(slotKey, weekKey) {
+  if (!data['workout_' + weekKey]) data['workout_' + weekKey] = {};
+  const wData = data['workout_' + weekKey];
+
+  const editor = document.createElement('div');
+  editor.className = 'meal-editor';
+
+  function getItems() {
+    const val = wData[slotKey] || '';
+    return val.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  function setItems(arr) {
+    wData[slotKey] = arr.join(', ');
+    saveData();
+    renderWorkoutWeek();
+  }
+
+  function rebuildChips() {
+    editor.innerHTML = '';
+    const items = getItems();
+    items.forEach((text, idx) => {
+      const cat = categorizzaWorkout(text);
+      const chip = document.createElement('span');
+      chip.className = 'meal-chip';
+      if (cat) {
+        const info = WORKOUT_CAT[cat];
+        chip.style.background = info.light;
+        chip.style.color = info.text;
+        chip.style.borderColor = info.colore + '55';
+      }
+      const label = document.createElement('span');
+      label.textContent = text;
+      chip.appendChild(label);
+      const x = document.createElement('span');
+      x.className = 'meal-chip-x';
+      x.textContent = '×';
+      x.addEventListener('mousedown', e => {
+        e.preventDefault();
+        const arr = getItems();
+        arr.splice(idx, 1);
+        setItems(arr);
+        rebuildChips();
+      });
+      chip.appendChild(x);
+      editor.appendChild(chip);
+    });
+    const inp = document.createElement('input');
+    inp.className = 'meal-tag-input';
+    inp.type = 'text';
+    inp.placeholder = '';
+    inp.addEventListener('keydown', function(e) {
+      if ((e.key === ',' || e.key === 'Enter') && this.value.trim()) {
+        e.preventDefault();
+        const arr = getItems();
+        arr.push(this.value.trim());
+        setItems(arr);
+        this.value = '';
+        rebuildChips();
+        editor.querySelector('.meal-tag-input').focus();
+      } else if (e.key === 'Backspace' && this.value === '') {
+        const arr = getItems();
+        if (arr.length > 0) {
+          const removed = arr.pop();
+          setItems(arr);
+          rebuildChips();
+          const ni = editor.querySelector('.meal-tag-input');
+          ni.value = removed;
+          ni.focus();
+        }
+      }
+    });
+    inp.addEventListener('blur', function() {
+      if (this.value.trim()) {
+        const arr = getItems();
+        arr.push(this.value.trim());
+        setItems(arr);
+        this.value = '';
+        rebuildChips();
+      }
+    });
+    editor.appendChild(inp);
+    editor.addEventListener('click', () => {
+      const i = editor.querySelector('.meal-tag-input');
+      if (i) i.focus();
+    });
+  }
+
+  rebuildChips();
+  return editor;
+}
+
+function renderWorkoutWeek() {
+  const ws = workoutViewingWeek || currentWeekStart;
+  const wKey = weekKey(ws);
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const label = document.getElementById('workoutWeekLabel');
+  if (label) label.textContent =
+    ws.toLocaleDateString('it-IT', { day:'numeric', month:'long' }) + ' – ' +
+    new Date(ws.getTime() + 6*86400000).toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' });
+
+  renderWorkoutFiche(ws);
+
+  const grid = document.getElementById('workoutWeekGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  for (let i = 0; i < 7; i++) {
+    const dayDate = new Date(ws.getTime() + i * 86400000);
+    const isToday = dayDate.getTime() === today.getTime();
+    const dayShort = GIORNI[i].slice(0,3).toUpperCase();
+
+    const col = document.createElement('div');
+    col.className = 'day-col';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'day-header' + (isToday ? ' today' : '');
+    const dayMins = calcolaMinutiGiorno(wKey, i);
+    hdr.innerHTML = `<span class="day-num">${dayDate.getDate()}</span>${dayShort}${dayMins > 0 ? `<span style="display:block;font-size:9px;margin-top:2px;opacity:0.85">${formatMinuti(dayMins)}</span>` : ''}`;
+    col.appendChild(hdr);
+
+    const mealsDiv = document.createElement('div');
+    mealsDiv.className = 'meals-col';
+
+    WORKOUT_SLOTS.forEach(slot => {
+      const slotKey = `d${i}_${slot.id}`;
+      const slotDiv = document.createElement('div');
+      slotDiv.className = 'meal-slot';
+      const lbl = document.createElement('div');
+      lbl.className = 'meal-label';
+      lbl.textContent = slot.label;
+      slotDiv.appendChild(lbl);
+      const editor = buildWorkoutEditor(slotKey, wKey);
+      slotDiv.appendChild(editor);
+      mealsDiv.appendChild(slotDiv);
+    });
+
+    col.appendChild(mealsDiv);
+    grid.appendChild(col);
+  }
+}
+
+function prevWeekWorkout() {
+  const ws = workoutViewingWeek || currentWeekStart;
+  workoutViewingWeek = new Date(ws.getTime() - 7*86400000);
+  renderWorkoutWeek();
+}
+
+function nextWeekWorkout() {
+  const ws = workoutViewingWeek || currentWeekStart;
+  const next = new Date(ws.getTime() + 7*86400000);
+  workoutViewingWeek = next > currentWeekStart ? null : next;
+  renderWorkoutWeek();
 }
 
 // ===== INIT =====
