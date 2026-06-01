@@ -665,9 +665,11 @@ function buildTagEditor(slotKey, wData, readOnly) {
       inp.className = 'meal-tag-input';
       inp.type = 'text';
       inp.placeholder = '';
+      let justCommitted = false;
       inp.addEventListener('keydown', function(e) {
         if ((e.key === ',' || e.key === 'Enter') && this.value.trim()) {
           e.preventDefault();
+          justCommitted = true;
           const arr = getItems();
           arr.push(this.value.trim());
           setItems(arr);
@@ -688,6 +690,7 @@ function buildTagEditor(slotKey, wData, readOnly) {
         }
       });
       inp.addEventListener('blur', function() {
+        if (justCommitted) { justCommitted = false; return; }
         if (this.value.trim()) {
           const arr = getItems();
           arr.push(this.value.trim());
@@ -1209,9 +1212,11 @@ function buildWorkoutEditor(slotKey, weekKey) {
     inp.className = 'meal-tag-input';
     inp.type = 'text';
     inp.placeholder = '';
+    let justCommitted = false;
     inp.addEventListener('keydown', function(e) {
       if ((e.key === ',' || e.key === 'Enter') && this.value.trim()) {
         e.preventDefault();
+        justCommitted = true;
         const arr = getItems();
         arr.push(this.value.trim());
         setItems(arr);
@@ -1231,6 +1236,7 @@ function buildWorkoutEditor(slotKey, weekKey) {
       }
     });
     inp.addEventListener('blur', function() {
+      if (justCommitted) { justCommitted = false; return; }
       if (this.value.trim()) {
         const arr = getItems();
         arr.push(this.value.trim());
